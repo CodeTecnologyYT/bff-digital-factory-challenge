@@ -1,5 +1,6 @@
 package pe.com.scotibank.bff.digital.factory.challenge.student.infrastructure.web.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,10 +36,12 @@ public class StudentController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @ApiResponse(responseCode = "201", description = "Success in creating a student")
-    @ApiResponse(responseCode = "400", description = "Error in the information to be sent",
+    @Operation(summary = "Create students", description = "Register a student with id different.")
+    @ApiResponse(responseCode = "201", description = "Success in creating a student.")
+    @ApiResponse(responseCode = "204", description = "Conflict with id student.")
+    @ApiResponse(responseCode = "400", description = "Error in the information to be sent.",
             content = @Content(schema = @Schema(hidden = true)))
-    @ApiResponse(responseCode = "500", description = "Unexpected error",
+    @ApiResponse(responseCode = "500", description = "Unexpected error.",
             content = @Content(schema = @Schema(hidden = true)))
     public Mono<StudentResponse> createStudent(@Valid @RequestBody Mono<StudentRequest> studentRequest) {
         return studentRequest.flatMap(createStudentUseCase::handle);
@@ -52,6 +55,10 @@ public class StudentController {
      * @return mono of page {@link StudentResponse}
      */
     @GetMapping
+    @Operation(summary = "Get all active students", description = "Retrieve a paginated list of students with state ACTIVE.")
+    @ApiResponse(responseCode = "200", description = "Success get page of students with state active.")
+    @ApiResponse(responseCode = "500", description = "Unexpected error.",
+            content = @Content(schema = @Schema(hidden = true)))
     public Mono<PageResponse<StudentResponse>> getStudents(@RequestParam(defaultValue = "0") int page,
                                                            @RequestParam(defaultValue = "10") int size) {
         return getStudentWithStateActiveUseCase.handle(PageRequest.of(page, size));
