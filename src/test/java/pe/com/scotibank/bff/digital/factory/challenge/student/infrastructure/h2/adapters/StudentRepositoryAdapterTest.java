@@ -34,9 +34,9 @@ class StudentRepositoryAdapterTest {
      */
     @BeforeEach
     void cleanDatabase() {
-
+        // Clean Database
         client.sql("DELETE FROM student").fetch().rowsUpdated().block();
-        // Insertar datos iniciales
+        // Insert Data Initially
         repository.saveAll(StudentFixture.getStudentListEntity()).blockLast();
     }
 
