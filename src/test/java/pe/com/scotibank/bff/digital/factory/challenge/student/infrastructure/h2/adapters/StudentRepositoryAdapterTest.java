@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.r2dbc.DataR2dbcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.r2dbc.core.DatabaseClient;
 import pe.com.scotibank.bff.digital.factory.challenge.shared.enums.StateEnum;
 import pe.com.scotibank.bff.digital.factory.challenge.student.domain.models.requests.StudentRequest;
@@ -34,7 +35,10 @@ class StudentRepositoryAdapterTest {
      */
     @BeforeEach
     void cleanDatabase() {
+
         client.sql("DELETE FROM student").fetch().rowsUpdated().block();
+        // Insertar datos iniciales
+        repository.saveAll(StudentFixture.getStudentListEntity()).blockLast();
     }
 
     /**
@@ -57,5 +61,32 @@ class StudentRepositoryAdapterTest {
                 .expectNextMatches(student -> student.name().equals("Bryan"))
                 .verifyComplete();
     }
+
+    /**
+     * Test.
+     */
+    @Test
+    void findAllByStateShouldReturnActiveStudents() {
+        final var pageable = PageRequest.of(0, 10);
+
+        StepVerifier.create(repository.findAllByState(StateEnum.ACTIVE, pageable))
+                .expectNextCount(2)
+                .verifyComplete();
+    }
+
+    /**
+     * Test.
+     */
+    @Test
+    void countByState_shouldReturnCorrectCount() {
+        StepVerifier.create(repository.countByState(StateEnum.ACTIVE))
+                .expectNext(2L)
+                .verifyComplete();
+
+        StepVerifier.create(repository.countByState(StateEnum.INACTIVE))
+                .expectNext(1L)
+                .verifyComplete();
+    }
+
 
 }
