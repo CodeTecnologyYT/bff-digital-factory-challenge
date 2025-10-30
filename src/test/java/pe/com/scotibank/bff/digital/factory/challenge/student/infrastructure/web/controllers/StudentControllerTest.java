@@ -1,24 +1,22 @@
 package pe.com.scotibank.bff.digital.factory.challenge.student.infrastructure.web.controllers;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatcher;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import pe.com.scotibank.bff.digital.factory.challenge.shared.enums.StateEnum;
 import pe.com.scotibank.bff.digital.factory.challenge.student.application.ICreateStudentUseCase;
+import pe.com.scotibank.bff.digital.factory.challenge.student.application.IGetStudentWithStateActiveUseCase;
 import pe.com.scotibank.bff.digital.factory.challenge.student.domain.models.requests.StudentRequest;
 import pe.com.scotibank.bff.digital.factory.challenge.student.domain.models.responses.StudentResponse;
 import pe.com.scotibank.bff.digital.factory.challenge.student.fixtures.StudentFixture;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 
 @WebFluxTest(controllers = StudentController.class)
@@ -30,6 +28,9 @@ class StudentControllerTest {
     /* createStudentUseCase. */
     @MockitoBean
     private ICreateStudentUseCase createStudentUseCase;
+    /* getStudentWithStateActiveUseCase. */
+    @MockitoBean
+    private IGetStudentWithStateActiveUseCase getStudentWithStateActiveUseCase;
 
     /**
      * Test.
@@ -50,7 +51,7 @@ class StudentControllerTest {
                 .uri("/challenge/students")
                 .bodyValue(request)
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().isCreated()
                 .expectBody(StudentResponse.class)
                 .value(resp -> {
                     assert resp.id().equals(id);
@@ -73,6 +74,35 @@ class StudentControllerTest {
                 .bodyValue(invalid)
                 .exchange()
                 .expectStatus().isBadRequest();
+    }
+
+    /**
+     * Test.
+     */
+    @Test
+    void getStudentsShouldReturnPagedStudents() {
+        // given
+        final var pageResponse = StudentFixture.getStudentPageResponse();
+
+        // when
+        Mockito.when(getStudentWithStateActiveUseCase.handle(ArgumentMatchers.any(PageRequest.class)))
+                .thenReturn(Mono.just(pageResponse));
+
+        // then
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/challenge/students")
+                        .queryParam("page", 0)
+                        .queryParam("size", 10)
+                        .build())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.content").isArray()
+                .jsonPath("$.content[0].name").isEqualTo("Bryan")
+                .jsonPath("$.content[1].name").isEqualTo("Ana")
+                .jsonPath("$.page").isEqualTo(0)
+                .jsonPath("$.size").isEqualTo(10)
+                .jsonPath("$.total").isEqualTo(2);
     }
 
 }
