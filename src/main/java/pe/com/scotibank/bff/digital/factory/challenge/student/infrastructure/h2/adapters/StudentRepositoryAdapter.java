@@ -1,14 +1,17 @@
 package pe.com.scotibank.bff.digital.factory.challenge.student.infrastructure.h2.adapters;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Repository;
+import pe.com.scotibank.bff.digital.factory.challenge.shared.enums.StateEnum;
 import pe.com.scotibank.bff.digital.factory.challenge.student.domain.models.requests.StudentRequest;
 import pe.com.scotibank.bff.digital.factory.challenge.student.domain.models.responses.StudentResponse;
 import pe.com.scotibank.bff.digital.factory.challenge.student.domain.ports.repositories.StudentRepositoryPort;
 import pe.com.scotibank.bff.digital.factory.challenge.student.infrastructure.h2.entities.StudentEntity;
 import pe.com.scotibank.bff.digital.factory.challenge.student.infrastructure.h2.repositories.StudentH2Repository;
 import pe.com.scotibank.bff.digital.factory.challenge.student.infrastructure.mappers.StudentMapper;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
@@ -39,7 +42,22 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
     /**
      * @inheritDoc
      */
-    public Mono<StudentResponse> save(StudentRequest studentRequest) {
+    public Flux<StudentResponse> findAllByState(final StateEnum state, final Pageable pageable) {
+        return studentH2Repository.findAllByState(state, pageable)
+                .map(studentMapper::toResponse);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public Mono<Long> countByState(final StateEnum state) {
+        return studentH2Repository.countByState(state);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public Mono<StudentResponse> save(final StudentRequest studentRequest) {
         return client.sql(INSERT_STUDENT_SCRIPT)
                 .bind("id", studentRequest.id())
                 .bind("name", studentRequest.name())

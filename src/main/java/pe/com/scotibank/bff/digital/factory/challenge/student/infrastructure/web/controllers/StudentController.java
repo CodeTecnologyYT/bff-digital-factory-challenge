@@ -6,9 +6,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import pe.com.scotibank.bff.digital.factory.challenge.shared.models.PageResponse;
 import pe.com.scotibank.bff.digital.factory.challenge.student.application.ICreateStudentUseCase;
+import pe.com.scotibank.bff.digital.factory.challenge.student.application.IGetStudentWithStateActiveUseCase;
 import pe.com.scotibank.bff.digital.factory.challenge.student.domain.models.requests.StudentRequest;
 import pe.com.scotibank.bff.digital.factory.challenge.student.domain.models.responses.StudentResponse;
 import reactor.core.publisher.Mono;
@@ -21,6 +24,8 @@ public class StudentController {
 
     /* createStudentUseCase. */
     private final ICreateStudentUseCase createStudentUseCase;
+    /* getStudentWithStateActiveUseCase. */
+    private final IGetStudentWithStateActiveUseCase getStudentWithStateActiveUseCase;
 
     /**
      * Create Student.
@@ -37,6 +42,19 @@ public class StudentController {
             content = @Content(schema = @Schema(hidden = true)))
     public Mono<StudentResponse> createStudent(@Valid @RequestBody Mono<StudentRequest> studentRequest) {
         return studentRequest.flatMap(createStudentUseCase::handle);
+    }
+
+    /**
+     * Students with State Active.
+     *
+     * @param page {@link Integer}
+     * @param size {@link Integer}
+     * @return mono of page {@link StudentResponse}
+     */
+    @GetMapping
+    public Mono<PageResponse<StudentResponse>> getStudents(@RequestParam(defaultValue = "0") int page,
+                                                           @RequestParam(defaultValue = "10") int size) {
+        return getStudentWithStateActiveUseCase.handle(PageRequest.of(page, size));
     }
 
 }
