@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication
+@PropertySource("classpath:database.properties")
 @PropertySource("classpath:bff-digital-factory-challenge-v1.0.properties")
 public class BffDigitalFactoryChallengeApplication {
 
