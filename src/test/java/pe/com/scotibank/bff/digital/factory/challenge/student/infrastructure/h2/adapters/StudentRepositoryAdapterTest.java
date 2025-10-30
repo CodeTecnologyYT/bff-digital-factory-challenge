@@ -77,7 +77,7 @@ class StudentRepositoryAdapterTest {
      * Test.
      */
     @Test
-    void countByState_shouldReturnCorrectCount() {
+    void countByStateShouldReturnCorrectCount() {
         StepVerifier.create(repository.countByState(StateEnum.ACTIVE))
                 .expectNext(2L)
                 .verifyComplete();
@@ -86,6 +86,5 @@ class StudentRepositoryAdapterTest {
                 .expectNext(1L)
                 .verifyComplete();
     }
-
 
 }
