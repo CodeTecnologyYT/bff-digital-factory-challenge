@@ -24,9 +24,9 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
     private final DatabaseClient client;
     /* studentMapper. */
     private final StudentMapper studentMapper;
-
-    final static String INSERT_SCRIPT = """
-            INSERT INTO student (id, name, last_name, age,state, created_at)
+    /* INSERT_STUDENT_SCRIPT. */
+    final static String INSERT_STUDENT_SCRIPT = """
+            INSERT INTO STUDENT (id, name, last_name, age,state, created_at)
             VALUES (:id, :name, :last_name, :age,:state, :created_at)""";
 
     /**
@@ -40,7 +40,7 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
      * @inheritDoc
      */
     public Mono<StudentResponse> save(StudentRequest studentRequest) {
-        return client.sql(INSERT_SCRIPT)
+        return client.sql(INSERT_STUDENT_SCRIPT)
                 .bind("id", studentRequest.id())
                 .bind("name", studentRequest.name())
                 .bind("last_name", studentRequest.lastName())
