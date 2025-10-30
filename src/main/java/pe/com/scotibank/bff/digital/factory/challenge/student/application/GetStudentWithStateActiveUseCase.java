@@ -1,7 +1,6 @@
 package pe.com.scotibank.bff.digital.factory.challenge.student.application;
 
 import lombok.RequiredArgsConstructor;
-import org.h2.mvstore.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pe.com.scotibank.bff.digital.factory.challenge.shared.enums.StateEnum;

@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.r2dbc.core.DatabaseClient;
 import pe.com.scotibank.bff.digital.factory.challenge.shared.enums.StateEnum;
-import pe.com.scotibank.bff.digital.factory.challenge.student.domain.models.requests.StudentRequest;
 import pe.com.scotibank.bff.digital.factory.challenge.student.fixtures.StudentFixture;
 import pe.com.scotibank.bff.digital.factory.challenge.student.infrastructure.h2.repositories.StudentH2Repository;
 import pe.com.scotibank.bff.digital.factory.challenge.student.infrastructure.mappers.StudentMapperImpl;

@@ -1,17 +1,14 @@
 package pe.com.scotibank.bff.digital.factory.challenge.student.infrastructure.web.controllers;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatcher;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import pe.com.scotibank.bff.digital.factory.challenge.shared.enums.StateEnum;
-import pe.com.scotibank.bff.digital.factory.challenge.shared.models.PageResponse;
 import pe.com.scotibank.bff.digital.factory.challenge.student.application.ICreateStudentUseCase;
 import pe.com.scotibank.bff.digital.factory.challenge.student.application.IGetStudentWithStateActiveUseCase;
 import pe.com.scotibank.bff.digital.factory.challenge.student.domain.models.requests.StudentRequest;
@@ -19,10 +16,7 @@ import pe.com.scotibank.bff.digital.factory.challenge.student.domain.models.resp
 import pe.com.scotibank.bff.digital.factory.challenge.student.fixtures.StudentFixture;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
 import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 
 @WebFluxTest(controllers = StudentController.class)
