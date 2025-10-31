@@ -53,7 +53,7 @@ Se eligio una arquitectura hexagonal diviendo en tres carpetas principales:
 ```
 ## 📊 Arquitectura
 Se eligio arquitectura en azure por que es mas escalable
-![data.png](images/diagrama.jpg)
+![data.png](images/Diagrama.jpg)
 
 ## 🚀 Requisitos Previos
 
