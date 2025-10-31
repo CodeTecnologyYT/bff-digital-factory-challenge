@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'pe.com.scotibank'
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0'
 description = 'bff-digital-factory-challenge'
 
 java {
@@ -43,7 +43,7 @@ dependencies {
 
     // Libraries metric in healthy
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+    implementation 'com.microsoft.azure:applicationinsights-runtime-attach:3.7.6'
 
     // Libraries for mapping and constructor automatic
     implementation 'org.projectlombok:lombok'
@@ -57,4 +57,7 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+tasks.named("bootJar") {
+    archiveFileName.set("app.jar")
 }
