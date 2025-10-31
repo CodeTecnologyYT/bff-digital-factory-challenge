@@ -71,8 +71,8 @@ public class LoggingAspect {
      * @param result {@link Object}
      */
     private void logSuccess(String className, String methodName, long startTime, Object result) {
-        long timeTaken = System.currentTimeMillis() - startTime;
-        String sanitizedResult = sanitizeObject(result);
+        final var timeTaken = System.currentTimeMillis() - startTime;
+        final var sanitizedResult = sanitizeObject(result);
         log.info("[{}][{}][BDFC_FINOK] timeTaken: [{} ms], response: {}", className, methodName, timeTaken, sanitizedResult);
     }
 
